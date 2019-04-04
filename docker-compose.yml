@@ -1,0 +1,28 @@
+version: '3'
+services:
+  cakephp-fpm:
+    image: cakephp/php-fpm
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/var/www/html
+    environment:
+      DEBUG: 1
+  cakephp-nginx:
+    image: nginx:latest
+    volumes: 
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./app:/var/www/html
+    ports:
+      - "8080:80"
+  cakephp-mysql:
+    image: mysql:5.7
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cakephp
+      # MYSQL_USER: db_user
+    ports:
+      - "3306:3306"
